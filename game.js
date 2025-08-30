@@ -146,8 +146,11 @@ function drawGrid() {
     // Responsive canvas size
     let size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.7, 600);
     cellSize = Math.floor(size / gridSize);
-    canvas.width = gridSize * cellSize;
-    canvas.height = gridSize * cellSize;
+    const pxSize = gridSize * cellSize;
+    canvas.width = pxSize;
+    canvas.height = pxSize;
+    canvas.style.width = pxSize + 'px';
+    canvas.style.height = pxSize + 'px';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const liveRGB = hexToRgb(liveColor);
     const fadeRGB = hexToRgb(fadeColor);
@@ -363,6 +366,7 @@ canvas.addEventListener('touchstart', function(e) {
 });
 
 canvas.addEventListener('touchmove', function(e) {
+    e.preventDefault();
     if (e.touches.length === 1) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
@@ -531,21 +535,28 @@ canvas.addEventListener('touchend', function() {
 });
 function handleTouchPaint(e) {
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.touches[0].clientX - rect.left) / cellSize);
-    const y = Math.floor((e.touches[0].clientY - rect.top) / cellSize);
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = Math.floor((e.touches[0].clientX - rect.left) * scaleX / cellSize);
+    const y = Math.floor((e.touches[0].clientY - rect.top) * scaleY / cellSize);
     mousePos = (x >= 0 && x < gridSize && y >= 0 && y < gridSize) ? {x, y} : null;
-    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
-        if (currentStamp !== 'none' && stamps[currentStamp]) {
-            stamps[currentStamp].forEach(([dy, dx]) => {
-                let ny = y + dy;
-                let nx = x + dx;
-                if (ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize) {
-                    grid[ny][nx] = 1;
-                }
-            });
-        } else {
-            grid[y][x] = 1;
+    const mirrorMode = document.getElementById('mirrorMode')?.value || 'none';
+    const divisions = parseInt(document.getElementById('mirrorDivisions')?.value || '4');
+    let coords = getMirroredCoords(x, y, mirrorMode, divisions);
+    coords.forEach(([mx, my]) => {
+        if (mx >= 0 && mx < gridSize && my >= 0 && my < gridSize) {
+            if (currentStamp !== 'none' && stamps[currentStamp]) {
+                stamps[currentStamp].forEach(([dy, dx]) => {
+                    let ny = my + dy;
+                    let nx = mx + dx;
+                    if (ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize) {
+                        grid[ny][nx] = 1;
+                    }
+                });
+            } else {
+                grid[my][mx] = 1;
+            }
         }
-        drawGrid();
-    }
+    });
+    drawGrid();
 }
