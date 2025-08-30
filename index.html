@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Of Life</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Game Of Life</h1>
+    <div id="controls">
+        <div class="control-row" style="flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+            <button id="startBtn">Start</button>
+            <button id="stopBtn">Stop</button>
+            <button id="clearBtn">Clear</button>
+            <button id="randomBtn">Random</button>
+            <button id="menuToggleBtn" style="margin-left:8px;">Menu</button>
+        </div>
+        <div id="mainControls" style="display:none; width: 100%; box-sizing: border-box;">
+            <div class="control-row variable-row" style="flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+                <div class="control-item">
+                    <label for="gridSize">Grid Size: <span id="gridSizeValue">50</span></label>
+                    <input type="range" id="gridSize" min="10" max="100" value="50">
+                </div>
+                <div class="control-item">
+                    <label for="stampSelect">Stamp:</label>
+                    <select id="stampSelect">
+                        <option value="none">None</option>
+                        <option value="glider">Glider</option>
+                        <option value="blinker">Blinker</option>
+                        <option value="block">Block</option>
+                        <option value="toad">Toad</option>
+                        <option value="beacon">Beacon</option>
+                        <option value="lwss">Lightweight Spaceship</option>
+                        <option value="pulsar">Pulsar</option>
+                        <option value="pentadecathlon">Pentadecathlon</option>
+                        <option value="diehard">Diehard</option>
+                        <option value="acorn">Acorn</option>
+                        <option value="rpentomino">R-pentomino</option>
+                        <option value="ttetromino">T-tetromino</option>
+                        <option value="cross">Cross</option>
+                    </select>
+                </div>
+                <div class="control-item">
+                    <label for="speed">Speed (ms): <span id="speedValue">50</span></label>
+                    <input type="range" id="speed" min="1" max="100" value="50">
+                </div>
+                <div class="control-item">
+                    <label for="mirrorMode">Mirror Mode:</label>
+                    <select id="mirrorMode">
+                        <option value="none">None</option>
+                        <option value="vertical">Vertical</option>
+                        <option value="horizontal">Horizontal</option>
+                        <option value="quadrants">Quadrants</option>
+                        <option value="circular">Circular</option>
+                    </select>
+                </div>
+                <div class="control-item" id="mirrorDivisionsContainer" style="display:none;">
+                    <label for="mirrorDivisions">Divisions:</label>
+                    <input type="number" id="mirrorDivisions" min="2" max="24" value="4" style="width:60px;">
+                </div>
+            </div>
+            <div class="control-row fade-row" style="flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+                <div class="control-item">
+                    <button id="toggleColorsBtn" class="color-toggle">Colors</button>
+                </div>
+                <div class="control-item">
+                    <label for="fadeTime">Fade Time: <span id="fadeTimeValue">20</span></label>
+                    <input type="range" id="fadeTime" min="1" max="100" value="20">
+                </div>
+                <div class="control-item">
+                    <label for="gridModeToggle">Grid Mode:</label>
+                    <button id="gridModeToggle">Toroidal (Wrap)</button>
+                </div>
+            </div>
+            <div class="control-row color-row" id="colorControls" style="display:none; flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+                <div class="control-item">
+                    <label for="liveColor">Live Cell:</label>
+                    <input type="color" id="liveColor" value="#00ff00">
+                </div>
+                <div class="control-item">
+                    <label for="fadeColor">Fade:</label>
+                    <input type="color" id="fadeColor" value="#ffff00">
+                </div>
+                <div class="control-item">
+                    <label for="deadColor">Dead Cell:</label>
+                    <input type="color" id="deadColor" value="#222222">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="canvasContainer" style="display:flex; justify-content:center; align-items:center; margin-bottom:32px;">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+    <!-- Footer removed as requested -->
+    <!-- Glowing effect removed from title -->
+    <script src="game.js"></script>
+</body>
+</html>
