@@ -403,18 +403,6 @@ function stopGame() {
 }
 
 function clearGrid() {
-    // Reset colors to default
-    liveColor = defaultLiveColor;
-    fadeColor = defaultFadeColor;
-    deadColor = defaultDeadColor;
-    // Update color pickers if present
-    const livePicker = document.getElementById('liveColor');
-    const fadePicker = document.getElementById('fadeColor');
-    const deadPicker = document.getElementById('deadColor');
-    if (livePicker) livePicker.value = defaultLiveColor;
-    if (fadePicker) fadePicker.value = defaultFadeColor;
-    if (deadPicker) deadPicker.value = defaultDeadColor;
-    document.documentElement.style.setProperty('--accent-live', defaultLiveColor);
     setupGrid();
     drawGrid();
 }
