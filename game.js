@@ -189,6 +189,15 @@ function randomizeGrid() {
 }
 
 function hexToRgb(hex) {
+    // Support both hex and rgb(...) formats
+    if (hex.startsWith('rgb')) {
+        // Extract numbers from rgb(...)
+        const match = hex.match(/rgb\s*\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (match) {
+            return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
+        }
+        return [0, 0, 0];
+    }
     hex = hex.replace('#', '');
     if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
     const num = parseInt(hex, 16);
