@@ -18,7 +18,7 @@ let cellSize = 20;
 let running = false;
 let grid = [];
 let fadeGrid = [];
-let smoothing = 0.5;
+let smoothing = 0;
 let timer = null;
 
 // Color customization
@@ -384,7 +384,7 @@ function clearGrid() {
 
 document.getElementById('startBtn').onclick = startGame;
 document.getElementById('stopBtn').onclick = stopGame;
-document.getElementById('clearBtn').onclick = () => { stopGame(); clearGrid(); };
+document.getElementById('clearBtn').onclick = () => { clearGrid(); };
 document.getElementById('randomBtn').onclick = () => { randomizeGrid(); drawGrid(); };
 document.getElementById('gridSize').oninput = function() {
     gridSize = parseInt(this.value);
