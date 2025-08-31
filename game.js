@@ -22,11 +22,11 @@ let smoothing = 0;
 let timer = null;
 
 // Color customization
-let liveColor = '#ffff00'; // yellow
+let liveColor = 'rgb(255,255,0)'; // Live Cell: 255,255,0
 let deadColor = '#222222';
-let fadeColor = '#800040'; // rgb(128,0,64)
-let defaultLiveColor = '#ffff00'; // yellow
-let defaultFadeColor = '#800040'; // rgb(128,0,64)
+let fadeColor = 'rgb(128,0,64)'; // Fade: 128,0,64
+let defaultLiveColor = 'rgb(255,255,0)'; // Live Cell: 255,255,0
+let defaultFadeColor = 'rgb(128,0,64)'; // Fade: 128,0,64
 let defaultDeadColor = '#222222';
 
 // Set color pickers to default on load
@@ -387,6 +387,18 @@ function stopGame() {
 }
 
 function clearGrid() {
+    // Reset colors to default
+    liveColor = defaultLiveColor;
+    fadeColor = defaultFadeColor;
+    deadColor = defaultDeadColor;
+    // Update color pickers if present
+    const livePicker = document.getElementById('liveColor');
+    const fadePicker = document.getElementById('fadeColor');
+    const deadPicker = document.getElementById('deadColor');
+    if (livePicker) livePicker.value = defaultLiveColor;
+    if (fadePicker) fadePicker.value = defaultFadeColor;
+    if (deadPicker) deadPicker.value = defaultDeadColor;
+    document.documentElement.style.setProperty('--accent-live', defaultLiveColor);
     setupGrid();
     drawGrid();
 }
@@ -406,9 +418,20 @@ document.getElementById('gridSize').oninput = function() {
 document.getElementById('speed').oninput = function() {
     speed = parseInt(this.value);
     document.getElementById('speedValue').textContent = speed;
-    if (running) {
-        stopGame();
-        startGame();
+    // Reset colors to default on new game
+    liveColor = defaultLiveColor;
+    fadeColor = defaultFadeColor;
+    deadColor = defaultDeadColor;
+    const livePicker = document.getElementById('liveColor');
+    const fadePicker = document.getElementById('fadeColor');
+    const deadPicker = document.getElementById('deadColor');
+    if (livePicker) livePicker.value = defaultLiveColor;
+    if (fadePicker) fadePicker.value = defaultFadeColor;
+    if (deadPicker) deadPicker.value = defaultDeadColor;
+    document.documentElement.style.setProperty('--accent-live', defaultLiveColor);
+    if (!running) {
+        running = true;
+        timer = setInterval(step, speed);
     }
 };
 
