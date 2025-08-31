@@ -18,6 +18,7 @@ let cellSize = 20;
 let running = false;
 let grid = [];
 let fadeGrid = [];
+let smoothing = 0.5;
 let timer = null;
 
 // Color customization
@@ -30,6 +31,18 @@ let defaultDeadColor = '#222222';
 
 // Set color pickers to default on load
 window.addEventListener('DOMContentLoaded', () => {
+    // Smoothing slider logic
+    const smoothingSlider = document.getElementById('smoothing');
+    const smoothingValue = document.getElementById('smoothingValue');
+    if (smoothingSlider && smoothingValue) {
+        smoothingSlider.value = smoothing;
+        smoothingValue.textContent = smoothing;
+        smoothingSlider.addEventListener('input', function() {
+            smoothing = parseFloat(this.value);
+            smoothingValue.textContent = smoothing.toFixed(2);
+            drawGrid();
+        });
+    }
     const livePicker = document.getElementById('liveColor');
     const fadePicker = document.getElementById('fadeColor');
     const deadPicker = document.getElementById('deadColor');
@@ -50,6 +63,44 @@ window.addEventListener('DOMContentLoaded', () => {
         };
     mirrorMode.value = 'none';
     mirrorDivisionsContainer.style.display = 'none';
+    }
+    // Info button popup logic
+    const infoBtn = document.getElementById('infoBtn');
+    const infoPopup = document.getElementById('infoPopup');
+    const closeInfo = document.getElementById('closeInfo');
+    if (infoBtn && infoPopup && closeInfo) {
+        infoBtn.addEventListener('click', function() {
+            infoPopup.classList.add('active');
+        });
+        closeInfo.addEventListener('click', function() {
+            infoPopup.classList.remove('active');
+        });
+        infoPopup.addEventListener('click', function(e) {
+            if (e.target === infoPopup) {
+                infoPopup.classList.remove('active');
+            }
+        });
+        document.addEventListener('keydown', function(e) {
+            if (infoPopup.classList.contains('active') && (e.key === 'Escape' || e.key === 'Esc')) {
+                infoPopup.classList.remove('active');
+            }
+        });
+        // Touch accessibility: close on swipe down or tap outside
+        let touchStartY = null;
+        infoPopup.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                touchStartY = e.touches[0].clientY;
+            }
+        });
+        infoPopup.addEventListener('touchend', function(e) {
+            if (touchStartY !== null && e.changedTouches.length === 1) {
+                const touchEndY = e.changedTouches[0].clientY;
+                if (touchEndY - touchStartY > 80) {
+                    infoPopup.classList.remove('active');
+                }
+                touchStartY = null;
+            }
+        });
     }
 });
 
@@ -157,26 +208,64 @@ function drawGrid() {
     const deadRGB = hexToRgb(deadColor);
     for (let y = 0; y < gridSize; y++) {
         for (let x = 0; x < gridSize; x++) {
+            let rgb;
             if (grid[y][x]) {
-                ctx.fillStyle = liveColor;
+                rgb = hexToRgb(liveColor);
             } else {
                 // Fade effect for dead cells
                 let fade = fadeGrid[y][x];
                 if (fade > 0) {
                     let t = fade / fadeTime;
-                    let rgb;
                     if (t > 0.5) {
-                        // First half: live → fade
                         rgb = blendColors(liveRGB, fadeRGB, (t - 0.5) * 2);
                     } else {
-                        // Second half: fade → dead
                         rgb = blendColors(fadeRGB, deadRGB, t * 2);
                     }
-                    ctx.fillStyle = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
                 } else {
-                    ctx.fillStyle = deadColor;
+                    rgb = hexToRgb(deadColor);
                 }
             }
+            // Smoothing: blend with neighbors
+            if (typeof smoothing !== 'undefined' && smoothing > 0) {
+                let neighbors = [];
+                for (let dy = -1; dy <= 1; dy++) {
+                    for (let dx = -1; dx <= 1; dx++) {
+                        if (dx === 0 && dy === 0) continue;
+                        let nx = x + dx;
+                        let ny = y + dy;
+                        if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize) {
+                            if (grid[ny][nx]) {
+                                neighbors.push(hexToRgb(liveColor));
+                            } else {
+                                let fade = fadeGrid[ny][nx];
+                                if (fade > 0) {
+                                    let t = fade / fadeTime;
+                                    if (t > 0.5) {
+                                        neighbors.push(blendColors(liveRGB, fadeRGB, (t - 0.5) * 2));
+                                    } else {
+                                        neighbors.push(blendColors(fadeRGB, deadRGB, t * 2));
+                                    }
+                                } else {
+                                    neighbors.push(hexToRgb(deadColor));
+                                }
+                            }
+                        }
+                    }
+                }
+                if (neighbors.length > 0) {
+                    let avg = [rgb[0], rgb[1], rgb[2]];
+                    for (let n of neighbors) {
+                        avg[0] += n[0] * smoothing;
+                        avg[1] += n[1] * smoothing;
+                        avg[2] += n[2] * smoothing;
+                    }
+                    avg[0] /= (1 + neighbors.length * smoothing);
+                    avg[1] /= (1 + neighbors.length * smoothing);
+                    avg[2] /= (1 + neighbors.length * smoothing);
+                    rgb = avg;
+                }
+            }
+            ctx.fillStyle = `rgb(${Math.round(rgb[0])},${Math.round(rgb[1])},${Math.round(rgb[2])})`;
             ctx.fillRect(x * cellSize, y * cellSize, cellSize - 1, cellSize - 1);
         }
     }

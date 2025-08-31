@@ -69,6 +69,10 @@
                     <input type="range" id="fadeTime" min="1" max="100" value="20">
                 </div>
                 <div class="control-item">
+                    <label for="smoothing">Smoothing: <span id="smoothingValue">0.5</span></label>
+                    <input type="range" id="smoothing" min="0" max="1" step="0.01" value="0.5">
+                </div>
+                <div class="control-item">
                     <label for="gridModeToggle">Grid Mode:</label>
                     <button id="gridModeToggle">Toroidal (Wrap)</button>
                 </div>
@@ -93,8 +97,17 @@
     <div id="canvasContainer" style="display:flex; justify-content:center; align-items:center; margin-bottom:32px;">
         <canvas id="gameCanvas"></canvas>
     </div>
-    <!-- Footer removed as requested -->
-    <!-- Glowing effect removed from title -->
-    <script src="game.js"></script>
-</body>
-</html>
+            <!-- Info Button and Popup -->
+            <button id="infoBtn" aria-label="Info" class="info-btn">&#9432;</button>
+            <div id="infoPopup" class="info-popup">
+                <div class="info-content">
+                    <span id="closeInfo" class="close-info">&times;</span>
+                    <h2>Game of Life Info</h2>
+                    <p>
+                        Conway's Game of Life is a cellular automaton devised by mathematician John Conway. The game consists of a grid of cells that evolve through generations based on simple rules. Click cells to toggle their state, then start the simulation!
+                    </p>
+                </div>
+            </div>
+            <script src="game.js"></script>
+    </body>
+    </html>
