@@ -22,11 +22,11 @@ let smoothing = 0;
 let timer = null;
 
 // Color customization
-let liveColor = 'rgb(255,255,0)'; // Live Cell: 255,255,0
+let liveColor = '#ffff00'; // Live Cell: 255,255,0
 let deadColor = '#222222';
-let fadeColor = 'rgb(128,0,64)'; // Fade: 128,0,64
-let defaultLiveColor = 'rgb(255,255,0)'; // Live Cell: 255,255,0
-let defaultFadeColor = 'rgb(128,0,64)'; // Fade: 128,0,64
+let fadeColor = '#800040'; // Fade: 128,0,64
+let defaultLiveColor = '#ffff00'; // Live Cell: 255,255,0
+let defaultFadeColor = '#800040'; // Fade: 128,0,64
 let defaultDeadColor = '#222222';
 
 // Set color pickers to default on load
@@ -46,20 +46,14 @@ window.addEventListener('DOMContentLoaded', () => {
     const livePicker = document.getElementById('liveColor');
     const fadePicker = document.getElementById('fadeColor');
     const deadPicker = document.getElementById('deadColor');
-    // Only set picker to default if not already set
-    if (livePicker && (!livePicker.value || livePicker.value === '')) {
-        livePicker.value = defaultLiveColor;
-    }
-    if (fadePicker && (!fadePicker.value || fadePicker.value === '')) {
-        fadePicker.value = defaultFadeColor;
-    }
-    if (deadPicker && (!deadPicker.value || deadPicker.value === '')) {
-        deadPicker.value = defaultDeadColor;
-    }
-    // Set accent color variable to match live cell color
-    if (livePicker) {
-        document.documentElement.style.setProperty('--accent-live', livePicker.value);
-    }
+    // Always set pickers and color variables to default on load
+    if (livePicker) livePicker.value = defaultLiveColor;
+    if (fadePicker) fadePicker.value = defaultFadeColor;
+    if (deadPicker) deadPicker.value = defaultDeadColor;
+    liveColor = defaultLiveColor;
+    fadeColor = defaultFadeColor;
+    deadColor = defaultDeadColor;
+    document.documentElement.style.setProperty('--accent-live', defaultLiveColor);
 
     // Mirror mode UI logic
     const mirrorMode = document.getElementById('mirrorMode');
