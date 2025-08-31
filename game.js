@@ -46,9 +46,20 @@ window.addEventListener('DOMContentLoaded', () => {
     const livePicker = document.getElementById('liveColor');
     const fadePicker = document.getElementById('fadeColor');
     const deadPicker = document.getElementById('deadColor');
-    if (livePicker) livePicker.value = defaultLiveColor;
-    if (fadePicker) fadePicker.value = defaultFadeColor;
-    if (deadPicker) deadPicker.value = defaultDeadColor;
+    // Only set picker to default if not already set
+    if (livePicker && (!livePicker.value || livePicker.value === '')) {
+        livePicker.value = defaultLiveColor;
+    }
+    if (fadePicker && (!fadePicker.value || fadePicker.value === '')) {
+        fadePicker.value = defaultFadeColor;
+    }
+    if (deadPicker && (!deadPicker.value || deadPicker.value === '')) {
+        deadPicker.value = defaultDeadColor;
+    }
+    // Set accent color variable to match live cell color
+    if (livePicker) {
+        document.documentElement.style.setProperty('--accent-live', livePicker.value);
+    }
 
     // Mirror mode UI logic
     const mirrorMode = document.getElementById('mirrorMode');
