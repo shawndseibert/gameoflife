@@ -422,19 +422,8 @@ document.getElementById('gridSize').oninput = function() {
 document.getElementById('speed').oninput = function() {
     speed = parseInt(this.value);
     document.getElementById('speedValue').textContent = speed;
-    // Reset colors to default on new game
-    liveColor = defaultLiveColor;
-    fadeColor = defaultFadeColor;
-    deadColor = defaultDeadColor;
-    const livePicker = document.getElementById('liveColor');
-    const fadePicker = document.getElementById('fadeColor');
-    const deadPicker = document.getElementById('deadColor');
-    if (livePicker) livePicker.value = defaultLiveColor;
-    if (fadePicker) fadePicker.value = defaultFadeColor;
-    if (deadPicker) deadPicker.value = defaultDeadColor;
-    document.documentElement.style.setProperty('--accent-live', defaultLiveColor);
-    if (!running) {
-        running = true;
+    if (running) {
+        clearInterval(timer);
         timer = setInterval(step, speed);
     }
 };
