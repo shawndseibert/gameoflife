@@ -54,6 +54,12 @@ window.addEventListener('DOMContentLoaded', () => {
     fadeColor = defaultFadeColor;
     deadColor = defaultDeadColor;
     document.documentElement.style.setProperty('--accent-live', defaultLiveColor);
+    // Also update accent color for title and glow effects
+    const h1 = document.querySelector('h1');
+    if (h1) {
+        h1.style.color = defaultLiveColor;
+        h1.style.textShadow = `0 2px 8px ${defaultLiveColor}, 0 2px 8px #000a`;
+    }
 
     // Mirror mode UI logic
     const mirrorMode = document.getElementById('mirrorMode');
