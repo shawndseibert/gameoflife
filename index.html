@@ -16,6 +16,31 @@
             <button id="randomBtn">Random</button>
             <button id="menuToggleBtn" style="margin-left:8px;">Menu</button>
         </div>
+        <!-- Controls: Fade Time, Mirror Mode, Mirror Divisions, Smoothing in one row -->
+        <div class="control-row moved-row" style="display: flex; flex-wrap: wrap; width: 100%; box-sizing: border-box; margin-top: 12px; gap: 16px;">
+            <div class="control-item">
+                <label for="fadeTime">Fade Time: <span id="fadeTimeValue">20</span></label>
+                <input type="range" id="fadeTime" min="1" max="100" value="20">
+            </div>
+            <div class="control-item">
+                <label for="mirrorMode">Mirror Mode:</label>
+                <select id="mirrorMode">
+                    <option value="none">None</option>
+                    <option value="vertical">Vertical</option>
+                    <option value="horizontal">Horizontal</option>
+                    <option value="quadrants">Quadrants</option>
+                    <option value="circular">Circular</option>
+                </select>
+            </div>
+            <div class="control-item" id="mirrorDivisionsContainer" style="display:none;">
+                <label for="mirrorDivisions">Divisions:</label>
+                <input type="number" id="mirrorDivisions" min="2" max="24" value="4" style="width:60px;">
+            </div>
+            <div class="control-item">
+                <label for="smoothing">Smoothing: <span id="smoothingValue">0.5</span></label>
+                <input type="range" id="smoothing" min="0" max="1" step="0.01" value="0.5">
+            </div>
+        </div>
         <div id="mainControls" style="display:none; width: 100%; box-sizing: border-box;">
             <div class="control-row variable-row" style="flex-wrap: wrap; width: 100%; box-sizing: border-box;">
                 <div class="control-item">
@@ -45,32 +70,10 @@
                     <label for="speed">Speed (ms): <span id="speedValue">50</span></label>
                     <input type="range" id="speed" min="1" max="100" value="50">
                 </div>
-                <div class="control-item">
-                    <label for="mirrorMode">Mirror Mode:</label>
-                    <select id="mirrorMode">
-                        <option value="none">None</option>
-                        <option value="vertical">Vertical</option>
-                        <option value="horizontal">Horizontal</option>
-                        <option value="quadrants">Quadrants</option>
-                        <option value="circular">Circular</option>
-                    </select>
-                </div>
-                <div class="control-item" id="mirrorDivisionsContainer" style="display:none;">
-                    <label for="mirrorDivisions">Divisions:</label>
-                    <input type="number" id="mirrorDivisions" min="2" max="24" value="4" style="width:60px;">
-                </div>
             </div>
             <div class="control-row fade-row" style="flex-wrap: wrap; width: 100%; box-sizing: border-box;">
                 <div class="control-item">
                     <button id="toggleColorsBtn" class="color-toggle">Colors</button>
-                </div>
-                <div class="control-item">
-                    <label for="fadeTime">Fade Time: <span id="fadeTimeValue">20</span></label>
-                    <input type="range" id="fadeTime" min="1" max="100" value="20">
-                </div>
-                <div class="control-item">
-                    <label for="smoothing">Smoothing: <span id="smoothingValue">0.5</span></label>
-                    <input type="range" id="smoothing" min="0" max="1" step="0.01" value="0.5">
                 </div>
                 <div class="control-item">
                     <label for="gridModeToggle">Grid Mode:</label>
@@ -78,15 +81,15 @@
                 </div>
             </div>
             <div class="control-row color-row" id="colorControls" style="display:none; flex-wrap: wrap; width: 100%; box-sizing: border-box;">
-                <div class="control-item">
+                <div class="control-item color-horizontal">
                     <label for="liveColor">Live Cell:</label>
                     <input type="color" id="liveColor" value="#00ff00">
                 </div>
-                <div class="control-item">
+                <div class="control-item color-horizontal">
                     <label for="fadeColor">Fade:</label>
                     <input type="color" id="fadeColor" value="#ffff00">
                 </div>
-                <div class="control-item">
+                <div class="control-item color-horizontal">
                     <label for="deadColor">Dead Cell:</label>
                     <input type="color" id="deadColor" value="#222222">
                 </div>
@@ -109,5 +112,18 @@
                 </div>
             </div>
             <script src="game.js"></script>
+            <script>
+            // Dynamically update accent color to match Live Cell color
+            function setAccentLiveColor(color) {
+                document.documentElement.style.setProperty('--accent-live', color);
+            }
+            const liveColorInput = document.getElementById('liveColor');
+            if (liveColorInput) {
+                setAccentLiveColor(liveColorInput.value);
+                liveColorInput.addEventListener('input', function(e) {
+                    setAccentLiveColor(e.target.value);
+                });
+            }
+            </script>
     </body>
     </html>
