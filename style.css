@@ -1,3 +1,7 @@
+/* Ensure color-row can be hidden by inline style */
+.color-row[style*="display: none"] {
+    display: none !important;
+}
 /* Accent color variable for Live Cell */
 :root {
     --accent-live: #ffff00;
@@ -17,14 +21,7 @@ canvas:hover {
     box-shadow: 0 8px 32px var(--accent-live) !important;
 }
 /* Always show color-row controls in a row, never stack vertically */
-.color-row {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    justify-content: center;
-    align-items: center;
-    gap: 24px;
-}
+/* .color-row display is now controlled by inline style for toggling */
 .color-horizontal {
     display: flex !important;
     flex-direction: column;
@@ -48,13 +45,6 @@ canvas:hover {
     }
 }
 /* Always show color-row controls in a row, never stack vertically */
-.color-row {
-    display: flex;
-    flex-direction: row !important;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 24px;
-}
 @media (max-width: 900px), (max-width: 700px), (max-width: 600px), (max-width: 500px) {
     .color-row {
         flex-direction: row !important;

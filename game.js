@@ -1,7 +1,11 @@
 // Show/hide color controls logic
 document.getElementById('toggleColorsBtn').onclick = function() {
     const colorControls = document.getElementById('colorControls');
-    colorControls.style.display = colorControls.style.display === 'none' ? 'flex' : 'none';
+    if (colorControls.style.display === '' || colorControls.style.display === 'none') {
+        colorControls.style.display = 'flex';
+    } else {
+        colorControls.style.display = 'none';
+    }
 };
 // Grid mode: 'toroidal' (wrap) or 'bounded' (edges dead)
 let gridMode = 'toroidal';
@@ -31,6 +35,9 @@ let defaultDeadColor = '#222222';
 
 // Set color pickers to default on load
 window.addEventListener('DOMContentLoaded', () => {
+    // Ensure color controls are hidden on initial load
+    const colorControls = document.getElementById('colorControls');
+    if (colorControls) colorControls.style.display = 'none';
     // Smoothing slider logic
     const smoothingSlider = document.getElementById('smoothing');
     const smoothingValue = document.getElementById('smoothingValue');
